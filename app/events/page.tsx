@@ -228,7 +228,6 @@ export default function EventsPage() {
 
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // ✅ FIX: declare ref like this (no `| null` in the type)
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -246,10 +245,8 @@ export default function EventsPage() {
     }
   }, [isMobile]);
 
-  // Focus trap + ESC close
   useFocusTrap(!!selected, modalRef, () => setSelected(null));
 
-  // Prevent background scroll when modal open
   useEffect(() => {
     if (!selected) return;
     const prev = document.body.style.overflow;
@@ -311,7 +308,6 @@ export default function EventsPage() {
     }, ttlMs);
   }
 
-  // Button system: beveled + hover/press + pointer + focus rings
   const btnBase =
     "cursor-pointer select-none rounded-xl border border-[var(--control-border)] bg-[var(--control)] " +
     "px-3 py-2 text-sm font-semibold text-[var(--text)] " +
@@ -352,7 +348,6 @@ export default function EventsPage() {
 
   return (
     <div data-theme={theme} className="min-h-screen bg-[var(--page)] text-[var(--text)]">
-      {/* FullCalendar styling + enforce event contrast in both themes */}
       <style>{`
         .fc {
           --fc-page-bg-color: var(--surface);
@@ -376,7 +371,6 @@ export default function EventsPage() {
         .fc .fc-timegrid-slot-label-cushion { color: var(--muted); }
         .fc .fc-event { cursor: pointer !important; }
 
-        /* Ensure event pills always have contrast */
         .fc .fc-event {
           background-color: var(--accent) !important;
           border-color: var(--accent) !important;
@@ -627,14 +621,12 @@ function RSVPForm({
   btnAccent: string;
   toast: (t: Omit<Toast, "id">) => void;
 }) {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"going" | "maybe">("going");
   const [submitting, setSubmitting] = useState(false);
 
-  const nameOk = clampStr(name).length >= 2;
   const emailOk = isValidEmail(email);
-  const canSubmit = nameOk && emailOk && !submitting;
+  const canSubmit = emailOk && !submitting;
 
   const segBase =
     "cursor-pointer select-none rounded-xl border border-[var(--control-border)] bg-[var(--control)] " +
@@ -645,8 +637,7 @@ function RSVPForm({
     "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 " +
     "focus-visible:ring-offset-[var(--page)]";
 
-  const segActive =
-    "bg-[var(--control-hover)] shadow-[inset_0_2px_6px_rgba(0,0,0,0.18)]";
+  const segActive = "bg-[var(--control-hover)] shadow-[inset_0_2px_6px_rgba(0,0,0,0.18)]";
 
   async function submit() {
     if (!canSubmit) return;
@@ -659,9 +650,8 @@ function RSVPForm({
         body: JSON.stringify({
           google_event_id: event.google_event_id,
           recurring_instance_id: event.recurring_instance_id,
-          name: clampStr(name),
           email: clampStr(email).toLowerCase(),
-          status, // ✅ new
+          status,
         }),
       });
 
@@ -674,7 +664,6 @@ function RSVPForm({
         message: "Check your email soon to confirm (next step).",
       });
 
-      setName("");
       setEmail("");
       setStatus("going");
     } catch (e: any) {
@@ -690,7 +679,6 @@ function RSVPForm({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Status segmented control */}
       <div>
         <div className="mb-2 text-sm font-extrabold">Your RSVP</div>
         <div className="inline-flex gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-2">
@@ -711,28 +699,10 @@ function RSVPForm({
             Maybe
           </button>
         </div>
-        <div className="mt-2 text-xs text-[var(--muted)]">
-          You’ll confirm by email next.
-        </div>
+        <div className="mt-2 text-xs text-[var(--muted)]">You’ll confirm by email next.</div>
       </div>
 
-      {/* Inputs */}
       <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="flex-1">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            className={inputClass}
-            aria-invalid={!nameOk && name.length > 0 ? true : undefined}
-          />
-          {!nameOk && name.length > 0 && (
-            <div className="mt-1 text-xs text-[var(--muted)]">
-              Please enter at least 2 characters.
-            </div>
-          )}
-        </div>
-
         <div className="flex-1">
           <input
             value={email}
@@ -743,9 +713,7 @@ function RSVPForm({
             aria-invalid={!emailOk && email.length > 0 ? true : undefined}
           />
           {!emailOk && email.length > 0 && (
-            <div className="mt-1 text-xs text-[var(--muted)]">
-              Enter a valid email address.
-            </div>
+            <div className="mt-1 text-xs text-[var(--muted)]">Enter a valid email address.</div>
           )}
         </div>
       </div>
@@ -755,4 +723,3 @@ function RSVPForm({
       </button>
     </div>
   );
-}
