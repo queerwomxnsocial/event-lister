@@ -5,14 +5,25 @@ export async function GET(req: Request) {
   const start = searchParams.get("start");
   const end = searchParams.get("end");
 
+  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+  const apiKey = process.env.GOOGLE_API_KEY;
+
+  // Safe logs (no secrets)
+  console.log("events route env:", {
+    hasCalendarId: !!calendarId,
+    hasApiKey: !!apiKey,
+  });
+
   if (!start || !end) {
     return NextResponse.json({ error: "Missing start/end" }, { status: 400 });
   }
 
-  const calendarId = process.env.GOOGLE_CALENDAR_ID!;
-  const apiKey = process.env.GOOGLE_API_KEY!;
-  console.log("Calendar ID in runtime:", calendarId);
-console.log("Has API key:", !!apiKey);
+  if (!calendarId || !apiKey) {
+    return NextResponse.json(
+      { error: "Missing env", hasCalendarId: !!calendarId, hasApiKey: !!apiKey },
+      { status: 500 }
+    );
+  }
 
   const url =
     "https://www.googleapis.com/calendar/v3/calendars/" +
@@ -28,6 +39,7 @@ console.log("Has API key:", !!apiKey);
     });
 
   const resp = await fetch(url, { cache: "no-store" });
+
   if (!resp.ok) {
     const details = await resp.text();
     return NextResponse.json({ error: "Google API error", details }, { status: 500 });
@@ -47,8 +59,5 @@ console.log("Has API key:", !!apiKey);
       description: e.description ?? null,
     }));
 
-  return NextResponse.json({
-  calendarId: process.env.GOOGLE_CALENDAR_ID,
-  hasApiKey: !!process.env.GOOGLE_API_KEY
-});
+  return NextResponse.json({ events });
 }
