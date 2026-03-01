@@ -1,4 +1,5 @@
 // lib/rsvpEmail.ts
+
 export async function sendEditLinkEmail(to: string, editUrl: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM;
