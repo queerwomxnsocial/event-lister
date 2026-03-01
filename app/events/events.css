@@ -1,0 +1,70 @@
+/* Page-scoped theme tokens */
+[data-theme="light"] {
+  --page: #f6f7fb;
+  --surface: #ffffff;
+  --surface2: #ffffff;
+  --border: rgba(0, 0, 0, 0.12);
+  --text: #111827;
+  --muted: rgba(17, 24, 39, 0.7);
+
+  --control: #ffffff;
+  --control-border: rgba(0, 0, 0, 0.14);
+  --control-hover: #f3f4f6;
+
+  --accent: #2563eb;
+  --accent-text: #ffffff;
+
+  --danger: #ef4444;
+
+  /* Skeleton */
+  --skeleton: rgba(17, 24, 39, 0.08);
+  --skeleton2: rgba(17, 24, 39, 0.12);
+}
+
+[data-theme="dark"] {
+  --page: #0b0f17;
+  --surface: #111827;
+  --surface2: #0f172a;
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #e5e7eb;
+  --muted: rgba(229, 231, 235, 0.75);
+
+  --control: #0b1220;
+  --control-border: rgba(255, 255, 255, 0.16);
+  --control-hover: #101a2e;
+
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+
+  --danger: #f87171;
+
+  --skeleton: rgba(229, 231, 235, 0.08);
+  --skeleton2: rgba(229, 231, 235, 0.12);
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% { transform: translateX(-60%); }
+  100% { transform: translateX(60%); }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--skeleton);
+  border-radius: 12px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-60%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--skeleton2),
+    transparent
+  );
+  animation: shimmer 1.25s infinite;
+}
