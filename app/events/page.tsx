@@ -644,7 +644,7 @@ function RSVPForm({
     setSubmitting(true);
 
     try {
-      const resp = await fetch("/api/rsvp/request", {
+      const resp = await fetch("/api/rsvp/request-edit-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
