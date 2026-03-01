@@ -33,34 +33,43 @@ export default function RSVPPage() {
         body: JSON.stringify(payload),
       });
 
+      // Always read as text first (prevents JSON parse crashes)
       const text = await res.text();
       let data: any = null;
+
       try {
         data = text ? JSON.parse(text) : null;
       } catch {
-        // If we ever get HTML back, this prevents a crash.
         console.error("Non-JSON response from /api/rsvp/submit:", text);
       }
 
+      // Success
       if (res.ok) {
         router.push("/rsvp/success");
         return;
       }
 
+      // Duplicate RSVP
       if (res.status === 409 && data?.alreadyExists) {
         const qp = new URLSearchParams({
           google_event_id,
           recurring_instance_id,
           email,
         });
+
         router.push(`/rsvp/already?${qp.toString()}`);
         return;
       }
 
-      setMsg(data?.error || `Something went wrong (status ${res.status}).`);
+      // Other error
+      setMsg(
+        data?.error ||
+          text ||
+          `Something went wrong (status ${res.status}).`
+      );
     } catch (err) {
-      console.error(err);
-      setMsg("Something went wrong.");
+      console.error("RSVP submit error:", err);
+      setMsg("Something went wrong. Please try again.");
     } finally {
       setBusy(false);
     }
@@ -90,7 +99,11 @@ export default function RSVPPage() {
 
         <label>
           Name
-          <input value={name} onChange={(e) => setName(e.target.value)} required />
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </label>
 
         <label>
