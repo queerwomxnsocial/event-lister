@@ -1,10 +1,17 @@
 name = "event-lister"
+main = ".open-next/worker.js"
 compatibility_date = "2026-03-01"
-
-[vars]
-# you'll set these in the dashboard for prod; this is optional for local
 keep_vars = true
 
+[assets]
+directory = ".open-next/assets"
+
+[env.production]
+keep_vars = true
 routes = [
   { pattern = "queerwomxnsocial.com/*", zone_name = "queerwomxnsocial.com" }
 ]
+
+[vars]
+PUBLIC_BASE_URL = "https://queerwomxnsocial.com"
+RESEND_FROM = "Community <noreply@queerwomxnsocial.com>"
