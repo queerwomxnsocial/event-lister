@@ -1,6 +1,10 @@
+// lib/rsvpEmail.ts
 export async function sendEditLinkEmail(to: string, editUrl: string) {
-  const apiKey = process.env.RESEND_API_KEY!;
-  const from = process.env.RESEND_FROM!;
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM;
+
+  if (!apiKey) throw new Error("Missing RESEND_API_KEY");
+  if (!from) throw new Error("Missing RESEND_FROM");
 
   const subject = "Edit your RSVP";
   const html = `
@@ -25,6 +29,6 @@ export async function sendEditLinkEmail(to: string, editUrl: string) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Failed to send email: ${res.status} ${text}`);
+    throw new Error(`Resend API error (${res.status}): ${text}`);
   }
 }
