@@ -3,3 +3,4 @@ compatibility_date = "2026-03-01"
 
 [vars]
 # you'll set these in the dashboard for prod; this is optional for local
+keep_vars = true
