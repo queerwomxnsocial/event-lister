@@ -29,12 +29,20 @@ export default function AlreadyClient() {
 
     setBusy(false);
 
-    const data = await res.json().catch(() => ({}));
-    if (res.ok) {
-      setMsg(data?.message || "If an RSVP exists, an edit link has been sent.");
-    } else {
-      setMsg(data?.error || "Could not send link.");
-    }
+    const text = await res.text();
+let data: any = null;
+try {
+  data = text ? JSON.parse(text) : null;
+} catch {
+  console.error("Non-JSON response:", text);
+}
+
+if (!res.ok) {
+  setMsg(data?.error || text || `Request failed (${res.status})`);
+  return;
+}
+
+setMsg(data?.message || "If an RSVP exists, an edit link has been sent.");
   }
 
   return (
