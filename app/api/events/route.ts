@@ -11,6 +11,8 @@ export async function GET(req: Request) {
 
   const calendarId = process.env.GOOGLE_CALENDAR_ID!;
   const apiKey = process.env.GOOGLE_API_KEY!;
+  console.log("Calendar ID in runtime:", calendarId);
+console.log("Has API key:", !!apiKey);
 
   const url =
     "https://www.googleapis.com/calendar/v3/calendars/" +
