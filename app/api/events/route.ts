@@ -47,5 +47,8 @@ console.log("Has API key:", !!apiKey);
       description: e.description ?? null,
     }));
 
-  return NextResponse.json({ events });
+  return NextResponse.json({
+  calendarId: process.env.GOOGLE_CALENDAR_ID,
+  hasApiKey: !!process.env.GOOGLE_API_KEY
+});
 }
