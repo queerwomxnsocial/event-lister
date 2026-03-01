@@ -13,5 +13,8 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "event-lister"
     }
-  ]
+  ],
+  "vars": {
+    "GOOGLE_CALENDAR_ID": "c_357d9e5902a1587fff544744789fbe653905a735554d5f49172a8ce6c3b1b1a1@group.calendar.google.com"
+  }
 }
